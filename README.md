@@ -20,6 +20,9 @@ class IndexController
 
 ~~~
 
+# 使用示列 Example
+ - https://github.com/nirvana72/phpRest2-example
+
 # 环境 Requirements
  - PHP >= 8.0
 
