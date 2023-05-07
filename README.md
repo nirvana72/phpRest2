@@ -73,4 +73,6 @@ RewriteRule ^ index.php [L]
 [路由信息](https://github.com/nirvana72/phpRest2-example/blob/main/App/Controller/IndexController.php)
 
 # 其它 Other
-需要 apcu 扩展
+需要php安装 apcu 扩展
+
+QQ: 15279663
