@@ -9,20 +9,20 @@ class ApiResult
 
     public string $msg = 'success';
 
-    public $data;
+    public mixed $data;
 
-    public function __construct($ret, $msg) {
+    public function __construct(int $ret, string $msg) {
         $this->ret = $ret;
         $this->msg = $msg;
     }
 
-    public static function success($data = null): ApiResult {
+    public static function success(mixed $data = null): ApiResult {
         $result = new ApiResult(1, 'success');
         $result->data = $data;
         return $result;
     }
 
-    public static function error($msg, $ret = -1): ApiResult {
+    public static function error(string $msg, int $ret = -1): ApiResult {
         return new ApiResult($ret, $msg);
     }
 }

@@ -44,7 +44,7 @@ class Action
      * 参数集合
      * @var Param[]
      */
-    public $params = [];
+    public array $params = [];
 
     /**
      * [[$classPath, $params]]

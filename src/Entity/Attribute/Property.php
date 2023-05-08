@@ -5,6 +5,7 @@ namespace PhpRest2\Entity\Attribute;
 
 use Attribute;
 use PhpRest2\AttributeInterface;
+use PhpRest2\Exception\BadCodeException;
 
 #[Attribute]
 class Property implements AttributeInterface
@@ -17,7 +18,12 @@ class Property implements AttributeInterface
 
     public function bind2Target(mixed $target) : void {
         if ($target->tag === 'property') {
-            if ($this->type !== '') $target->varType = $this->type;
+            if ($this->type !== '') {
+                if ($target->varType !== 'mixed' && $target->varType !== $this->type) {
+                    throw new BadCodeException("实体类属性 {$target->varName} 类型描述不一至");
+                }
+                $target->varType = $this->type;
+            }
             if ($this->rule !== '') $target->rule = $this->rule;
         }
     }

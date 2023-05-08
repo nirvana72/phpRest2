@@ -86,7 +86,7 @@ class ControllerBuilder
                     throw new BadRequestException("方法 {$action->funcName} 的参数注解 {$attr->name} 未被使用");
                 }
                 $param = $action->params[$attr->name];
-                if ($param) $attr->bind2Target($param);
+                $attr->bind2Target($param);
             }
 
             $actions[$action->funcName] = $action;

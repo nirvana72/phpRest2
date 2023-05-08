@@ -44,8 +44,15 @@ class Entity extends AbstractOrmEntity
     /**
      * @var Property[]
      */
-    public $properties = [];
+    public array $properties = [];
 
+    /**
+     * 把数据注入实体类对象
+     * 
+     * @param mixed $data 数据
+     * @param bool  $withValidator 是否需要验证数据
+     * @param mixed $obj 实体类引用，如果是空则创建一个
+     */
     public function makeInstanceWithData(mixed $data, bool $withValidator = false, mixed &$obj = null) : mixed 
     {
         if ($obj === null) $obj = Application::getInstance()->make($this->classPath);

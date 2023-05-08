@@ -5,7 +5,7 @@ namespace PhpRest2\Controller\Attribute;
 
 use Attribute;
 use PhpRest2\AttributeInterface;
-use PhpRest2\Exception\BadRequestException;
+use PhpRest2\Exception\BadCodeException;
 
 #[Attribute(Attribute::TARGET_METHOD | Attribute::IS_REPEATABLE)]
 class Param implements AttributeInterface
@@ -23,7 +23,7 @@ class Param implements AttributeInterface
         if ($target->tag === 'param') {
             if ($this->type !== '') {
                 if ($target->varType !== 'mixed' && $target->varType !== $this->type) {
-                    throw new BadRequestException("参数 {$target->varName} 类型描述不一至");
+                    throw new BadCodeException("参数 {$target->varName} 类型描述不一至");
                 }
                 $target->varType = $this->type;
             }

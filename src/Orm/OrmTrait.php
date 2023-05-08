@@ -135,7 +135,7 @@ trait OrmTrait
         return $res;
     }
 
-    private function getDb() 
+    private function getDb(): Medoo
     {
         return Application::getInstance()->get(Medoo::class);
     }
