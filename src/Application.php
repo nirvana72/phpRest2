@@ -47,7 +47,7 @@ class Application implements ContainerInterface, FactoryInterface
      * @param string $path controller所在目录
      * @param string $namespace controller所在命名空间
      */
-    public function scanRoutesFromPath(string $path, string $namespace) {
+    public function scanRoutesFromPath(string $path, string $namespace): void {
         $this->scanPath($path, $namespace, 'Controller.php', function(string $classPath) {
             // 遍历加载 controller 类, string $classPath controller命名空间全路径
             try {
@@ -78,7 +78,7 @@ class Application implements ContainerInterface, FactoryInterface
      * @param string $path Listener所在目录
      * @param string $namespace Listener所在命名空间
      */
-    public function scanListenerFromPath(string $path, string $namespace) {
+    public function scanListenerFromPath(string $path, string $namespace): void {
         $this->scanPath($path, $namespace, 'Listener.php', function(string $classPath) {
             if (false === is_subclass_of($classPath, \PhpRest2\Event\EventInterface::class)) {
                 throw new BadCodeException("{$classPath} 必须继承于 \PhpRest2\Event\EventInterface");
@@ -91,7 +91,7 @@ class Application implements ContainerInterface, FactoryInterface
         });
     }
 
-    private function scanPath(string $filePath, string $namespace, string $fileEndStr, callable $callback) {
+    private function scanPath(string $filePath, string $namespace, string $fileEndStr, callable $callback): void {
         $d = dir($filePath);
         while (($entry = $d->read()) !== false){
             if ($entry == '.' || $entry == '..') { continue; }
@@ -112,7 +112,7 @@ class Application implements ContainerInterface, FactoryInterface
         $request = Request::createFromGlobals();
         $contentType = $request->headers->get('CONTENT_TYPE');
         $httpMethod  = $request->getMethod();
-        if (0 === strpos($contentType, 'application/json') && in_array($httpMethod, ['POST', 'PUT'])) {
+        if (str_starts_with($contentType, 'application/json') && in_array($httpMethod, ['POST', 'PUT'])) {
             $data = json_decode($request->getContent(), true) ?: [];
             $request->request = new ParameterBag($data);
         }
@@ -122,7 +122,7 @@ class Application implements ContainerInterface, FactoryInterface
     /**
      * 解析请求
      */
-    public function dispatch() {
+    public function dispatch(): void {
         $request = $this->get(Request::class);
         $httpMethod = $request->getMethod();
         $uri        = $request->getRequestUri();
@@ -241,7 +241,7 @@ class Application implements ContainerInterface, FactoryInterface
      * @var string[] Hook类全命名空间
      */
     private array $globalHooks = [];
-    public function addGlobalHook(string $classPath) {
+    public function addGlobalHook(string $classPath): void {
         $this->globalHooks[] = $classPath;
     }
 

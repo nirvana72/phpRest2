@@ -37,7 +37,7 @@ trait OrmTrait
         return $self;
     }
 
-    public function insert()
+    public function insert(): \PDOStatement
     {
         $entity = Application::getInstance()->get(EntityBuilder::class)->build(self::class);
         $data = [];
@@ -74,7 +74,7 @@ trait OrmTrait
         return $res;
     }
 
-    public function update() 
+    public function update(): \PDOStatement
     {
         $entity = Application::getInstance()->get(EntityBuilder::class)->build(self::class);
         $data = [];
@@ -104,13 +104,13 @@ trait OrmTrait
         return $res;
     }
 
-    public static function delete($pk = null) 
+    public static function delete($pk = null): \PDOStatement
     {
         $self = Application::getInstance()->make(self::class);
         return $self->remove($pk);
     }
 
-    public function remove($pk = null) 
+    public function remove($pk = null): \PDOStatement
     {
         $entity = Application::getInstance()->get(EntityBuilder::class)->build(self::class);
         $where = $pk;

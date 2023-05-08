@@ -13,7 +13,7 @@ class Validator extends \Valitron\Validator
      * @param string $rules
      * @param string $field
      */
-    public function myRule(string $rules, string $field) {
+    public function myRule(string $rules, string $field): void {
         if (empty($rules)) return;
         foreach(explode('|', $rules) as $rule) {
             $args = explode('=', $rule);

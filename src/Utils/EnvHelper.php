@@ -25,7 +25,7 @@ class EnvHelper
      * @param string $default 默认值
      * @return string
      */
-    public static function get(string $name, $default = ''): string
+    public static function get(string $name, string $default = ''): string
     {
         $config = self::$config;
         $keys = explode('.', $name);

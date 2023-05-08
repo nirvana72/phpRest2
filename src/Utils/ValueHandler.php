@@ -5,17 +5,16 @@ namespace PhpRest2\Utils;
 
 use PhpRest2\Application;
 use PhpRest2\Exception\BadRequestException;
-use PhpRest2\Utils\Validator;
 use PhpRest2\Entity\EntityBuilder;
 
 class ValueHandler
 {
     public function __construct(
-        private string $varName,
-        private string $varType,
-        private string $rule,
-        private bool $isArray,
-        private bool $withValidator,
+        private readonly string $varName,
+        private readonly string $varType,
+        private readonly string $rule,
+        private readonly bool   $isArray,
+        private readonly bool   $withValidator,
     ) {}
 
     public function getValue(mixed $val) : mixed {
@@ -52,7 +51,7 @@ class ValueHandler
     }
 
     // 普通数组
-    private function getArrayResult(array $val) : array {
+    private function getArrayResult(mixed $val) : array {
         if (is_array($val) === false || \PhpRest2\isAssocArray($val) === true) {
             throw new BadRequestException("参数 {$this->varName} 不是数组");
         }
@@ -77,7 +76,7 @@ class ValueHandler
     }
 
     // 验证参数值
-    private function validate(mixed $val) {
+    private function validate(mixed $val): void {
         $rules = [];
         if ($this->varType === 'int')   $rules[] = '/^[-]?[0-9]+$/';
         if ($this->varType === 'float') $rules[] = '/^[-]?([0-9]*[.])?[0-9]+$/';

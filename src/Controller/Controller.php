@@ -26,7 +26,7 @@ class Controller
      * 描述
      */
     public string $desc = '';
-    public function getDesc() {
+    public function getDesc(): string {
         if ($this->desc === '') return $this->name;
         return $this->desc;
     }

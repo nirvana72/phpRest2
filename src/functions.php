@@ -57,7 +57,7 @@ if (! function_exists( 'PhpRest2\isAssocArray' )) {
      * @param array $ary
      * @return bool
      */
-    function isAssocArray(array $ary): bool
+    function isAssocArray(mixed $ary): bool
     {
         if (is_array($ary) === false) return false;
         if (count($ary) <= 0) return false;
