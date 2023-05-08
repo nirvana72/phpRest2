@@ -571,7 +571,10 @@ class Medoo
         $log[] = $timeFinish - $timeBegin;
 
         if ($this->logging) {
-            $this->logs[] = $log;
+            // nij 最多只记录100条日志
+            if (count($this->logs) < 100) {
+                $this->logs[] = $log;
+            }
         } else {
             $this->logs = [$log];
         }
@@ -612,7 +615,6 @@ class Medoo
             $identifier[$this->type] ?? '"$1"',
             $statement
         );
-
         foreach ($map as $key => $value) {
             if ($value[1] === PDO::PARAM_STR) {
                 // nij 这里好像是个BUG 要给字符串变量加引号，但变量有时候会是个float类型
@@ -2228,6 +2230,10 @@ class Medoo
                 // nij 格式化日志字符串
                 list($sql, $map, $time) = $log;
                 $readAbleSql = $this->generate($sql, $map);
+                
+                // 超长SQL只日志前3000字符
+                if (strlen($readAbleSql) > 3000) $readAbleSql = substr($readAbleSql, 0, 3000) . '...';
+
                 return "[{$time} ms] {$readAbleSql}";
                 // return $this->generate($log[0], $log[1]);
             },
