@@ -71,6 +71,7 @@ class ValueHandler
             'int'    => intval($val),
             'float'  => floatval($val),
             'string' => strval($val),
+            'bool'   => boolval($val),
             default  => $val,
         };
     }

@@ -53,6 +53,8 @@ class Property extends AbstractOrmProperty
 
         $val = $data[$this->varName];
 
+        if ($val === null) return null;
+
         $valueHandler = new ValueHandler(
             $this->varName, 
             $this->varType, 
