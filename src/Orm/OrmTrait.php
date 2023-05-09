@@ -74,7 +74,7 @@ trait OrmTrait
         return $res;
     }
 
-    public function update(): \PDOStatement
+    public function update(array $withNullFiles = []) 
     {
         $entity = Application::getInstance()->get(EntityBuilder::class)->build(self::class);
         $data = [];
@@ -92,6 +92,9 @@ trait OrmTrait
             // 只更新有值的属性
             if (isset($this->{$p->varName})) {
                 $data[$field] = $this->{$p->varName};
+            } elseif(in_array($field, $withNullFiles)) {
+                // 或者指定非空要插入null的字段
+                $data[$field] = null;
             }
         }
         $res = $this->getDb()->update($entity->getTableName(), $data, $where);
