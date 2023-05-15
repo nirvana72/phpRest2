@@ -69,7 +69,6 @@ class Application implements ContainerInterface, FactoryInterface
             try {
                 $controller = $this->get(ControllerBuilder::class)->build($classPath);
                 if ($controller === null) return;
-                \App\log($classPath);
                 $this->controllers[] = $classPath;
                 foreach ($controller->actions as $actionName => $action) {
                     $this->routes[] = [
