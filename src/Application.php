@@ -9,20 +9,22 @@ use PhpRest2\Controller\ControllerBuilder;
 use PhpRest2\Exception\ExceptionHandlerInterface;
 use PhpRest2\Exception\{BadCodeException, BadRequestException};
 use DI\FactoryInterface;
+use PhpRest2\Utils\FileCacheHelper;
 
 class Application implements ContainerInterface, FactoryInterface
 {
     /**
      * 创建app对象
      */
-    public static function create(string|array $config = []): Application {
+    public static function create(string|array $config = [], string $fileCachePath = ''): Application {
         $builder = new \DI\ContainerBuilder();
+        if ($fileCachePath !== '') {
+            $builder->enableCompilation($fileCachePath);
+        }
         $builder->addDefinitions(__DIR__ . '/Definitions.php');
         $builder->addDefinitions($config);
         $builder->useAutowiring(false);
         $builder->useAttributes(true);
-        // $builder->enableCompilation(__DIR__ . '/cache');
-
         $container = $builder->build();
 
         $request = $container->get(Request::class);
@@ -32,9 +34,13 @@ class Application implements ContainerInterface, FactoryInterface
             $response->send();
             exit;
         }
+
         $app = new self();
         $app->container = $container;
         $app->unionId = md5(__DIR__);
+        if ($fileCachePath !== '') {
+            $app->fileCacheHelper = new FileCacheHelper($fileCachePath);
+        }
         self::$instance = $app;
         return $app;
     }
@@ -48,11 +54,22 @@ class Application implements ContainerInterface, FactoryInterface
      * @param string $namespace controller所在命名空间
      */
     public function scanRoutesFromPath(string $path, string $namespace): void {
+        $cacheKey = "AppRoutes_{$this->unionId}";
+        if ($this->fileCacheHelper !== null) {
+            $cache = $this->fileCacheHelper->get($cacheKey);
+            if ($cache !== null) {
+                $this->controllers = $cache['controllers'];
+                $this->routes = $cache['routes'];
+                return;
+            }
+        }
+
         $this->scanPath($path, $namespace, 'Controller.php', function(string $classPath) {
             // 遍历加载 controller 类, string $classPath controller命名空间全路径
             try {
                 $controller = $this->get(ControllerBuilder::class)->build($classPath);
                 if ($controller === null) return;
+                \App\log($classPath);
                 $this->controllers[] = $classPath;
                 foreach ($controller->actions as $actionName => $action) {
                     $this->routes[] = [
@@ -68,6 +85,10 @@ class Application implements ContainerInterface, FactoryInterface
                 exit;
             }
         });
+
+        if ($this->fileCacheHelper !== null) {
+            $this->fileCacheHelper->set($cacheKey, ['controllers' => $this->controllers, 'routes' => $this->routes]);
+        }
     }
 
     /**
@@ -79,6 +100,15 @@ class Application implements ContainerInterface, FactoryInterface
      * @param string $namespace Listener所在命名空间
      */
     public function scanListenerFromPath(string $path, string $namespace): void {
+        $cacheKey = "AppListener_{$this->unionId}";
+        if ($this->fileCacheHelper !== null) {
+            $cache = $this->fileCacheHelper->get($cacheKey);
+            if ($cache !== null) {
+                $this->events = $cache;
+                return;
+            }
+        }
+
         $this->scanPath($path, $namespace, 'Listener.php', function(string $classPath) {
             if (false === is_subclass_of($classPath, \PhpRest2\Event\EventInterface::class)) {
                 throw new BadCodeException("{$classPath} 必须继承于 \PhpRest2\Event\EventInterface");
@@ -89,6 +119,10 @@ class Application implements ContainerInterface, FactoryInterface
                 $this->events[$event][] = $classPath;
             }
         });
+
+        if ($this->fileCacheHelper !== null) {
+            $this->fileCacheHelper->set($cacheKey, $this->events);
+        }
     }
 
     private function scanPath(string $filePath, string $namespace, string $fileEndStr, callable $callback): void {
@@ -245,11 +279,16 @@ class Application implements ContainerInterface, FactoryInterface
         $this->globalHooks[] = $classPath;
     }
 
-     /** 
+    /** 
      * 所有注册的事件对象
      * */
     private array $events = [];
     public function getEvent($eventName) : array{
         return $this->events[$eventName] ?: [];
     }
+
+    /** 
+     * 路由信息文件缓存
+     * */
+    private FileCacheHelper|null $fileCacheHelper = null;
 }
