@@ -6,7 +6,7 @@ namespace PhpRest2\Orm;
 use PhpRest2\Application;
 use PhpRest2\Entity\EntityBuilder;
 use PhpRest2\Exception\BadCodeException;
-use PhpRest2\Database\Medoo;
+use Medoo\Medoo;
 
 trait OrmTrait
 {
@@ -68,7 +68,9 @@ trait OrmTrait
 
         //自增主键赋值
         if ($autoPrimaryVarName !== null) {
-            $this->{$autoPrimaryVarName} = $this->getDb()->getAutoId();
+            $autoId = $this->getDb()->id();
+            if ($autoId === false) throw new BadCodeException("{$entity->classPath} 自增ID获取失败");
+            $this->{$autoPrimaryVarName} = intval($autoId);
         }
         
         return $res;
