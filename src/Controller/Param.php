@@ -56,6 +56,11 @@ class Param
      */
     public function getValueFromRequest(Request $request) : mixed
     {
+        // 直接绑定Request对象
+        if ($this->varType === Request::class) {
+            return $request;
+        }
+
         list($source, $name) = explode('.', $this->bind);
         $val = $request->{$source}->get($name, null);
         if ($val === null) {

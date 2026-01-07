@@ -143,7 +143,7 @@ class Application implements ContainerInterface, FactoryInterface
 
     public static function createRequestFromSymfony(): Request {
         $request = Request::createFromGlobals();
-        $contentType = $request->headers->get('CONTENT_TYPE');
+        $contentType = $request->headers->get('CONTENT_TYPE') ?: '';
         $httpMethod  = $request->getMethod();
         if (str_starts_with($contentType, 'application/json') && in_array($httpMethod, ['POST', 'PUT'])) {
             $data = json_decode($request->getContent(), true) ?: [];
