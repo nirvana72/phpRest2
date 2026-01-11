@@ -11,7 +11,7 @@ use PhpRest2\Exception\{BadCodeException, BadRequestException};
 use DI\FactoryInterface;
 use PhpRest2\Utils\FileCacheHelper;
 
-class Application implements ContainerInterface, FactoryInterface
+final class Application implements ContainerInterface, FactoryInterface
 {
     /**
      * 创建app对象
@@ -125,20 +125,28 @@ class Application implements ContainerInterface, FactoryInterface
     }
 
     private function scanPath(string $filePath, string $namespace, string $fileEndStr, callable $callback): void {
-        $d = dir($filePath);
-        while (($entry = $d->read()) !== false){
-            if ($entry == '.' || $entry == '..') { continue; }
-            $path = $filePath . '/' . $entry;
-            if (is_file($path)) {
-                if (str_ends_with  ($entry, $fileEndStr)) {
+        if (!is_dir($filePath)) {
+            return;
+        }
+        
+        $iterator = new \DirectoryIterator($filePath);
+        foreach ($iterator as $fileInfo) {
+            if ($fileInfo->isDot()) {
+                continue;
+            }
+            
+            $entry = $fileInfo->getFilename();
+            $path = $filePath . DIRECTORY_SEPARATOR . $entry;
+            
+            if ($fileInfo->isFile()) {
+                if (str_ends_with($entry, $fileEndStr)) {
                     $classPath = $namespace . '\\' . substr($entry, 0, -4);
-                    $callback($classPath);                    
+                    $callback($classPath);
                 }
-            } else {
+            } elseif ($fileInfo->isDir()) {
                 $this->scanPath($path, $namespace . '\\' . $entry, $fileEndStr, $callback);
             }
         }
-        $d->close();
     }
 
     public static function createRequestFromSymfony(): Request {

@@ -5,7 +5,7 @@ namespace PhpRest2\Utils;
 
 use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
-class FileCacheHelper
+final class FileCacheHelper
 {
     private FilesystemAdapter $cache;
 

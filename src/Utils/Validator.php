@@ -7,7 +7,7 @@ namespace PhpRest2\Utils;
  * Validator
  * see https://github.com/vlucas/valitron#built-in-validation-rules
  */
-class Validator extends \Valitron\Validator
+final class Validator extends \Valitron\Validator
 {
     /**
      * @param string $rules

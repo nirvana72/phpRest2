@@ -8,7 +8,7 @@ use PhpRest2\AttributeInterface;
 use Symfony\Component\Cache\Adapter\ApcuAdapter as ApcuCache;
 use DI\Attribute\Inject;
 
-class EntityBuilder
+final class EntityBuilder
 {
     #[Inject]
     private ApcuCache $cache;

@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 use PhpRest2\Exception\BadRequestException;
 use PhpRest2\Utils\ValueHandler;
 
-class Param
+final class Param
 {
     public string $tag = 'param';
     

@@ -10,7 +10,7 @@ use Symfony\Component\Cache\Adapter\ApcuAdapter as ApcuCache;
 use DI\Attribute\Inject;
 use PhpRest2\Exception\BadRequestException;
 
-class ControllerBuilder
+final class ControllerBuilder
 {
     #[Inject]
     private ApcuCache $cache;

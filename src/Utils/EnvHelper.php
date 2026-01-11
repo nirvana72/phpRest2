@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace PhpRest2\Utils;
 
-class EnvHelper
+final class EnvHelper
 {
     private static array $config = [];
 

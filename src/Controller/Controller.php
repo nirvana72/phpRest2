@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace PhpRest2\Controller;
 
-class Controller
+final class Controller
 {
     public function __construct(string $classPath)
     {

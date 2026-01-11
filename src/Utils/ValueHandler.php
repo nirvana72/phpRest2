@@ -7,7 +7,7 @@ use PhpRest2\Application;
 use PhpRest2\Exception\BadRequestException;
 use PhpRest2\Entity\EntityBuilder;
 
-class ValueHandler
+final class ValueHandler
 {
     public function __construct(
         private readonly string $varName,

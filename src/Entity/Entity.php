@@ -7,7 +7,7 @@ use PhpRest2\Application;
 use PhpRest2\Orm\AbstractOrmEntity;
 use PhpRest2\Exception\BadRequestException;
 
-class Entity extends AbstractOrmEntity
+final class Entity extends AbstractOrmEntity
 {
     public function __construct(string $classPath)
     {

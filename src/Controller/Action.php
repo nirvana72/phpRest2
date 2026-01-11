@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\{Request, Response};
 use PhpRest2\Application;
 use PhpRest2\Render\ResponseRenderInterface;
 
-class Action
+final class Action
 {
     public string $tag = 'action';
 

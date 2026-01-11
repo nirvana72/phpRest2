@@ -6,7 +6,7 @@ namespace PhpRest2\Entity;
 use PhpRest2\Orm\AbstractOrmProperty;
 use PhpRest2\Utils\ValueHandler;
 
-class Property extends AbstractOrmProperty
+final class Property extends AbstractOrmProperty
 {
     public string $tag = 'property';
 
